@@ -5,6 +5,8 @@ import { ReminderCard } from "@/components/reminder-card";
 import { getPendingReminders, getCatchUpContacts } from "@/lib/queries";
 import { formatDate, relativeToNow } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [reminders, catchUp] = await Promise.all([getPendingReminders(), getCatchUpContacts()]);
 

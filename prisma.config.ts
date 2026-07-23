@@ -8,8 +8,11 @@ export default defineConfig({
   migrations: {
     path: "prisma/migrations",
   },
+  // Only the Prisma CLI (migrate, studio, etc.) reads this config — the running
+  // app connects separately via its own adapter using DATABASE_URL (pooled),
+  // see src/lib/prisma.ts. CLI commands use the unpooled URL since pooled
+  // connections can't reliably hold the advisory lock migrations use.
   datasource: {
-    url: process.env["DATABASE_URL"],
-    directUrl: process.env["DATABASE_URL_UNPOOLED"],
+    url: process.env["DATABASE_URL_UNPOOLED"],
   },
 });

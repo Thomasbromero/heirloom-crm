@@ -3,6 +3,8 @@ import { getArchivedReminders } from "@/lib/queries";
 import { ACTION_LABELS, type ActionType } from "@/lib/constants";
 import { formatShortDate } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function ArchivePage() {
   const reminders = await getArchivedReminders();
 
