@@ -4,6 +4,40 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
+export async function setAppName(formData: FormData) {
+  const name = (formData.get("name") as string)?.trim();
+  if (!name) return;
+
+  await prisma.appSettings.upsert({
+    where: { id: "singleton" },
+    create: { id: "singleton", name },
+    update: { name },
+  });
+
+  revalidatePath("/", "layout");
+}
+
+export async function completeOnboarding(formData: FormData) {
+  const name = (formData.get("name") as string)?.trim();
+  if (!name) return;
+
+  await prisma.appSettings.upsert({
+    where: { id: "singleton" },
+    create: { id: "singleton", name },
+    update: { name },
+  });
+
+  revalidatePath("/", "layout");
+  redirect("/");
+}
+
+export async function resetAllData() {
+  await prisma.contact.deleteMany();
+  await prisma.eventContext.deleteMany();
+
+  revalidatePath("/", "layout");
+}
+
 export async function createContact(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   if (!name) return;

@@ -2,8 +2,12 @@ import Link from "next/link";
 import { Home, Users, Calendar, Archive, Settings, Plus } from "lucide-react";
 import { SidebarLink, TabLink } from "@/components/nav-link";
 import { Avatar } from "@/components/avatar";
+import { getAppSettings } from "@/lib/queries";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export async function AppShell({ children }: { children: React.ReactNode }) {
+  const settings = await getAppSettings();
+  const name = settings?.name ?? "there";
+
   return (
     <div className="flex min-h-screen">
       <aside className="hidden md:flex md:w-64 md:flex-col md:gap-6 md:border-r md:border-border md:bg-surface md:p-6">
@@ -12,7 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <Avatar name="Alex" size="md" />
+          <Avatar name={name} size="md" />
           <div>
             <p className="text-sm font-semibold">Welcome back</p>
             <p className="text-xs text-foreground-muted">Stay connected</p>

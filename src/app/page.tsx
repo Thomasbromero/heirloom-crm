@@ -1,19 +1,23 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Hourglass } from "lucide-react";
 import { Avatar } from "@/components/avatar";
 import { ReminderCard } from "@/components/reminder-card";
-import { getPendingReminders, getCatchUpContacts } from "@/lib/queries";
+import { getPendingReminders, getCatchUpContacts, getAppSettings } from "@/lib/queries";
 import { formatDate, relativeToNow } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const settings = await getAppSettings();
+  if (!settings) redirect("/onboarding");
+
   const [reminders, catchUp] = await Promise.all([getPendingReminders(), getCatchUpContacts()]);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
       <p className="text-sm text-foreground-muted">{formatDate(new Date())}</p>
-      <h1 className="font-display mt-1 text-3xl font-bold">Hi, Alex!</h1>
+      <h1 className="font-display mt-1 text-3xl font-bold">Hi, {settings.name}!</h1>
       <p className="mt-1 text-sm text-foreground-muted">
         Here&apos;s who might appreciate reaching out today. Take your time.
       </p>

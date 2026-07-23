@@ -18,6 +18,11 @@ datasource db {
 // ReminderStatus: "pending" | "done"
 // InteractionType: "message" | "call" | "meetup" | "other"
 
+model AppSettings {
+  id   String @id @default("singleton")
+  name String
+}
+
 model Contact {
   id               String   @id @default(cuid())
   name             String

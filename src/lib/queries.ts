@@ -2,6 +2,10 @@ import { prisma } from "@/lib/prisma";
 import { CATCH_UP_THRESHOLD_DAYS } from "@/lib/constants";
 import { daysBetween } from "@/lib/format";
 
+export async function getAppSettings() {
+  return prisma.appSettings.findUnique({ where: { id: "singleton" } });
+}
+
 export async function getPendingReminders() {
   const reminders = await prisma.reminder.findMany({
     where: { status: "pending" },
