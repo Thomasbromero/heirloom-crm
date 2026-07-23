@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// These are plain Strings, not Prisma enums.
+// Allowed values are enforced in the app layer (see src/lib/constants.ts):
+// Circle: "close" | "family" | "friends" | "work" | "acquaintances"
+// ActionType: "message" | "meetup" | "checkin" | "other"
+// Priority: "normal" | "urgent"
+// ReminderStatus: "pending" | "done"
+// InteractionType: "message" | "call" | "meetup" | "other"
+
+model Contact {
+  id               String   @id @default(cuid())
+  name             String
+  avatarUrl        String?
+  circle           String
+  howMet           String?
+  birthday         DateTime?
+  phone            String?
+  email            String?
+  preferredContact String?
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  reminders    Reminder[]
+  interactions Interaction[]
+}
+
+model EventContext {
+  id        String   @id @default(cuid())
+  name      String
+  date      DateTime?
+  notes     String?
+  createdAt DateTime @default(now())
+
+  reminders Reminder[]
+}
+
+model Reminder {
+  id             String    @id @default(cuid())
+  contactId      String
+  contact        Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  actionType     String
+  dueDate        DateTime?
+  eventContextId String?
+  eventContext   EventContext? @relation(fields: [eventContextId], references: [id], onDelete: SetNull)
+  priority       String    @default("normal")
+  note           String?
+  status         String    @default("pending")
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+}
+
+model Interaction {
+  id        String   @id @default(cuid())
+  contactId String
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  type      String
+  note      String?
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+}
