@@ -34,8 +34,10 @@ export async function completeOnboarding(formData: FormData) {
 export async function resetAllData() {
   await prisma.contact.deleteMany();
   await prisma.eventContext.deleteMany();
+  await prisma.appSettings.deleteMany();
 
   revalidatePath("/", "layout");
+  redirect("/");
 }
 
 export async function createContact(formData: FormData) {

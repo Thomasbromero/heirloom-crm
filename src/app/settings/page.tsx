@@ -40,11 +40,11 @@ export default async function SettingsPage() {
           Danger zone
         </h2>
         <p className="mt-1 text-sm text-foreground-muted">
-          Permanently deletes every contact, reminder, event, and interaction. Your name stays as is. This cannot be undone.
+          Permanently deletes every contact, reminder, event, and interaction, and forgets your name (you&apos;ll go through the welcome screen again). This cannot be undone.
         </p>
         <form action={resetAllData} className="mt-4">
           <DangerButton
-            confirmMessage="This will permanently delete ALL contacts, reminders, and history. This cannot be undone. Are you sure?"
+            confirmMessage="This will permanently delete ALL contacts, reminders, and history, and reset your name. This cannot be undone. Are you sure?"
             className="rounded-xl bg-urgent px-4 py-2.5 text-sm font-semibold text-white hover:brightness-95"
           >
             Reset everything to zero
