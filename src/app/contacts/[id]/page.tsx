@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Cake, Phone, Mail, MessageCircle, Bell, PlusCircle } from "lucide-react";
+import { ArrowLeft, Cake, Phone, Mail, MessageCircle, Bell, PlusCircle, Pencil, Trash2 } from "lucide-react";
 import { Avatar } from "@/components/avatar";
 import { ReminderCard } from "@/components/reminder-card";
+import { DangerButton } from "@/components/danger-button";
 import { getContactDetail } from "@/lib/queries";
 import { getPendingReminders } from "@/lib/queries";
-import { logInteraction } from "@/lib/actions";
+import { logInteraction, deleteContact } from "@/lib/actions";
 import { birthdayLabel, formatShortDate, whatsappLink } from "@/lib/format";
 import { CIRCLE_LABELS, INTERACTION_TYPES, INTERACTION_LABELS, type Circle } from "@/lib/constants";
 
@@ -43,6 +44,23 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
             <Bell size={16} />
             Remind Me
           </Link>
+          <Link
+            href={`/contacts/${contact.id}/edit`}
+            className="flex items-center gap-1.5 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground-muted hover:bg-surface-muted"
+          >
+            <Pencil size={16} />
+            Edit
+          </Link>
+          <form action={deleteContact}>
+            <input type="hidden" name="id" value={contact.id} />
+            <DangerButton
+              confirmMessage={`Delete ${contact.name}? This also removes their reminders and interaction history. This cannot be undone.`}
+              className="flex items-center gap-1.5 rounded-xl border border-urgent/40 bg-urgent-soft px-4 py-2 text-sm font-semibold text-urgent hover:brightness-95"
+            >
+              <Trash2 size={16} />
+              Delete
+            </DangerButton>
+          </form>
         </div>
       </div>
 

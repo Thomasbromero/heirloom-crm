@@ -70,6 +70,50 @@ export async function createContact(formData: FormData) {
   redirect(`/contacts/${contact.id}`);
 }
 
+export async function updateContact(formData: FormData) {
+  const id = formData.get("id") as string;
+  const name = (formData.get("name") as string)?.trim();
+  if (!id || !name) return;
+
+  const circle = (formData.get("circle") as string) || "friends";
+  const howMet = (formData.get("howMet") as string)?.trim() || null;
+  const birthdayStr = formData.get("birthday") as string;
+  const phone = (formData.get("phone") as string)?.trim() || null;
+  const email = (formData.get("email") as string)?.trim() || null;
+  const preferredContact = (formData.get("preferredContact") as string)?.trim() || null;
+  const notes = (formData.get("notes") as string)?.trim() || null;
+
+  await prisma.contact.update({
+    where: { id },
+    data: {
+      name,
+      circle,
+      howMet,
+      birthday: birthdayStr ? new Date(birthdayStr) : null,
+      phone,
+      email,
+      preferredContact,
+      notes,
+    },
+  });
+
+  revalidatePath("/contacts");
+  revalidatePath("/");
+  revalidatePath(`/contacts/${id}`);
+  redirect(`/contacts/${id}`);
+}
+
+export async function deleteContact(formData: FormData) {
+  const id = formData.get("id") as string;
+  if (!id) return;
+
+  await prisma.contact.delete({ where: { id } });
+
+  revalidatePath("/contacts");
+  revalidatePath("/");
+  redirect("/contacts");
+}
+
 export async function createReminder(formData: FormData) {
   const contactId = formData.get("contactId") as string;
   const actionType = formData.get("actionType") as string;
