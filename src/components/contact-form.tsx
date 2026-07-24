@@ -3,6 +3,8 @@ import { CIRCLES, CIRCLE_LABELS, type Circle } from "@/lib/constants";
 type ContactFormValues = {
   id?: string;
   name?: string;
+  firstName?: string | null;
+  lastName?: string | null;
   circle?: string;
   howMet?: string | null;
   birthday?: Date | null;
@@ -15,6 +17,18 @@ type ContactFormValues = {
 function toDateInputValue(date?: Date | null) {
   if (!date) return "";
   return date.toISOString().slice(0, 10);
+}
+
+// Older contacts only have a combined `name`. Split it as a best-effort
+// fallback so editing them still pre-fills sensible first/last names.
+function defaultFirstName(contact?: ContactFormValues) {
+  if (contact?.firstName) return contact.firstName;
+  return contact?.name?.split(" ")[0] ?? "";
+}
+
+function defaultLastName(contact?: ContactFormValues) {
+  if (contact?.lastName) return contact.lastName;
+  return contact?.name?.split(" ").slice(1).join(" ") ?? "";
 }
 
 export function ContactForm({
@@ -34,16 +48,28 @@ export function ContactForm({
     <form action={action} className="mt-6 flex flex-col gap-5">
       {contact?.id && <input type="hidden" name="id" value={contact.id} />}
 
-      <div>
-        <label className="text-sm font-semibold" htmlFor="name">Name</label>
-        <input
-          id="name"
-          name="name"
-          required
-          defaultValue={contact?.name ?? ""}
-          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
-          placeholder="Full name"
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-semibold" htmlFor="firstName">First name</label>
+          <input
+            id="firstName"
+            name="firstName"
+            required
+            defaultValue={defaultFirstName(contact)}
+            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            placeholder="First name"
+          />
+        </div>
+        <div>
+          <label className="text-sm font-semibold" htmlFor="lastName">Last name</label>
+          <input
+            id="lastName"
+            name="lastName"
+            defaultValue={defaultLastName(contact)}
+            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            placeholder="Last name (optional)"
+          />
+        </div>
       </div>
 
       <div>

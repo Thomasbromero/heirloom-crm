@@ -4,8 +4,6 @@ import { setAppName, resetAllData } from "@/lib/actions";
 import { logout } from "@/lib/auth-actions";
 import { DangerButton } from "@/components/danger-button";
 
-export const dynamic = "force-dynamic";
-
 export default async function SettingsPage() {
   const settings = await getAppSettings();
 

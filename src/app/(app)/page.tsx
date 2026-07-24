@@ -6,8 +6,6 @@ import { ReminderCard } from "@/components/reminder-card";
 import { getPendingReminders, getCatchUpContacts, getAppSettings } from "@/lib/queries";
 import { formatDate, relativeToNow } from "@/lib/format";
 
-export const dynamic = "force-dynamic";
-
 export default async function HomePage() {
   const settings = await getAppSettings();
   if (!settings) redirect("/onboarding");

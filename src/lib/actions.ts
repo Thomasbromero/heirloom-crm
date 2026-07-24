@@ -40,9 +40,14 @@ export async function resetAllData() {
   redirect("/");
 }
 
+function combineName(firstName: string, lastName: string): string {
+  return lastName ? `${firstName} ${lastName}` : firstName;
+}
+
 export async function createContact(formData: FormData) {
-  const name = (formData.get("name") as string)?.trim();
-  if (!name) return;
+  const firstName = (formData.get("firstName") as string)?.trim();
+  if (!firstName) return;
+  const lastName = (formData.get("lastName") as string)?.trim() ?? "";
 
   const circle = (formData.get("circle") as string) || "friends";
   const howMet = (formData.get("howMet") as string)?.trim() || null;
@@ -54,7 +59,9 @@ export async function createContact(formData: FormData) {
 
   const contact = await prisma.contact.create({
     data: {
-      name,
+      name: combineName(firstName, lastName),
+      firstName,
+      lastName: lastName || null,
       circle,
       howMet,
       birthday: birthdayStr ? new Date(birthdayStr) : null,
@@ -72,8 +79,9 @@ export async function createContact(formData: FormData) {
 
 export async function updateContact(formData: FormData) {
   const id = formData.get("id") as string;
-  const name = (formData.get("name") as string)?.trim();
-  if (!id || !name) return;
+  const firstName = (formData.get("firstName") as string)?.trim();
+  if (!id || !firstName) return;
+  const lastName = (formData.get("lastName") as string)?.trim() ?? "";
 
   const circle = (formData.get("circle") as string) || "friends";
   const howMet = (formData.get("howMet") as string)?.trim() || null;
@@ -86,7 +94,9 @@ export async function updateContact(formData: FormData) {
   await prisma.contact.update({
     where: { id },
     data: {
-      name,
+      name: combineName(firstName, lastName),
+      firstName,
+      lastName: lastName || null,
       circle,
       howMet,
       birthday: birthdayStr ? new Date(birthdayStr) : null,

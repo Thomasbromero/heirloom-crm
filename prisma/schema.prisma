@@ -26,6 +26,8 @@ model AppSettings {
 model Contact {
   id               String   @id @default(cuid())
   name             String
+  firstName        String?
+  lastName         String?
   avatarUrl        String?
   circle           String
   howMet           String?
