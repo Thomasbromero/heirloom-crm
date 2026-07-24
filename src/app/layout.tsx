@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -16,6 +16,15 @@ const body = Inter({
 export const metadata: Metadata = {
   title: "Heirloom CRM",
   description: "Keep track of the people who matter.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Heirloom CRM",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#faf3e9",
 };
 
 export default function RootLayout({

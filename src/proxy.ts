@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
 
+const PUBLIC_PATHS = ["/login", "/manifest.webmanifest", "/icon.png", "/apple-icon.png"];
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/login")) {
+  if (PUBLIC_PATHS.includes(pathname) || pathname.startsWith("/icon-")) {
     return NextResponse.next();
   }
 
