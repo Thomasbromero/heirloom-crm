@@ -1,10 +1,11 @@
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { CATCH_UP_THRESHOLD_DAYS } from "@/lib/constants";
 import { daysBetween } from "@/lib/format";
 
-export async function getAppSettings() {
+export const getAppSettings = cache(async () => {
   return prisma.appSettings.findUnique({ where: { id: "singleton" } });
-}
+});
 
 export async function getPendingReminders() {
   const reminders = await prisma.reminder.findMany({
@@ -18,6 +19,14 @@ export async function getPendingReminders() {
     const aTime = a.dueDate?.getTime() ?? Infinity;
     const bTime = b.dueDate?.getTime() ?? Infinity;
     return aTime - bTime;
+  });
+}
+
+export async function getPendingRemindersForContact(contactId: string) {
+  return prisma.reminder.findMany({
+    where: { status: "pending", contactId },
+    include: { contact: true, eventContext: true },
+    orderBy: { createdAt: "asc" },
   });
 }
 

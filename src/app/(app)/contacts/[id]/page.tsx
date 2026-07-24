@@ -4,19 +4,18 @@ import { ArrowLeft, Cake, Phone, Mail, MessageCircle, Bell, PlusCircle, Pencil, 
 import { Avatar } from "@/components/avatar";
 import { ReminderCard } from "@/components/reminder-card";
 import { DangerButton } from "@/components/danger-button";
-import { getContactDetail } from "@/lib/queries";
-import { getPendingReminders } from "@/lib/queries";
+import { getContactDetail, getPendingRemindersForContact } from "@/lib/queries";
 import { logInteraction, deleteContact } from "@/lib/actions";
 import { birthdayLabel, formatShortDate, whatsappLink } from "@/lib/format";
 import { CIRCLE_LABELS, INTERACTION_TYPES, INTERACTION_LABELS, type Circle } from "@/lib/constants";
 
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const contact = await getContactDetail(id);
+  const [contact, reminders] = await Promise.all([
+    getContactDetail(id),
+    getPendingRemindersForContact(id),
+  ]);
   if (!contact) notFound();
-
-  const allPending = await getPendingReminders();
-  const reminders = allPending.filter((r) => r.contactId === id);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:px-8">
