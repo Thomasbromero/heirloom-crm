@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
-import { AppShell } from "@/components/app-shell";
 import "./globals.css";
 
 const heading = Poppins({
@@ -26,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${heading.variable} ${body.variable} h-full`}>
-      <body className="min-h-full antialiased">
-        <AppShell>{children}</AppShell>
-      </body>
+      <body className="min-h-full antialiased">{children}</body>
     </html>
   );
 }
