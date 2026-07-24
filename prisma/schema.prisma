@@ -75,5 +75,6 @@ model Interaction {
   type      String
   note      String?
   date      DateTime @default(now())
+  hasTime   Boolean  @default(false)
   createdAt DateTime @default(now())
 }

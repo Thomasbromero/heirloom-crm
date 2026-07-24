@@ -6,7 +6,7 @@ import { ReminderCard } from "@/components/reminder-card";
 import { DangerButton } from "@/components/danger-button";
 import { getContactDetail, getPendingRemindersForContact } from "@/lib/queries";
 import { logInteraction, deleteContact } from "@/lib/actions";
-import { birthdayLabel, formatShortDate, whatsappLink } from "@/lib/format";
+import { birthdayLabel, formatShortDate, formatTime, whatsappLink } from "@/lib/format";
 import { CIRCLE_LABELS, INTERACTION_TYPES, INTERACTION_LABELS, type Circle } from "@/lib/constants";
 
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -151,6 +151,33 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                 placeholder="What did you talk about?"
                 className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
               />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-foreground-muted" htmlFor="interaction-date">
+                    Date (optional)
+                  </label>
+                  <input
+                    id="interaction-date"
+                    name="date"
+                    type="date"
+                    className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-foreground-muted" htmlFor="interaction-time">
+                    Time (optional)
+                  </label>
+                  <input
+                    id="interaction-time"
+                    name="time"
+                    type="time"
+                    className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-foreground-muted">
+                Leave the date blank to use today. Time is optional.
+              </p>
               <button
                 type="submit"
                 className="self-start rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-hover"
@@ -169,7 +196,10 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                 {contact.interactions.map((interaction) => (
                   <li key={interaction.id} className="relative">
                     <span className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full bg-primary" />
-                    <p className="text-xs text-foreground-muted">{formatShortDate(interaction.date)}</p>
+                    <p className="text-xs text-foreground-muted">
+                      {formatShortDate(interaction.date)}
+                      {interaction.hasTime && ` · ${formatTime(interaction.date)}`}
+                    </p>
                     <p className="text-sm font-medium">
                       {INTERACTION_LABELS[interaction.type as keyof typeof INTERACTION_LABELS] ?? interaction.type}
                     </p>

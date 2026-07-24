@@ -44,6 +44,10 @@ export function formatShortDate(date: Date): string {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+export function formatTime(date: Date): string {
+  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+}
+
 export function birthdayLabel(birthday: Date): string {
   const now = new Date();
   const next = new Date(now.getFullYear(), birthday.getMonth(), birthday.getDate());

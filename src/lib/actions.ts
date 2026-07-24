@@ -201,10 +201,30 @@ export async function logInteraction(formData: FormData) {
   if (!contactId || !type) return;
 
   const note = (formData.get("note") as string)?.trim() || null;
-  const dateStr = formData.get("date") as string;
+  const dateStr = (formData.get("date") as string)?.trim() || "";
+  const timeStr = (formData.get("time") as string)?.trim() || "";
+  const hasTime = timeStr.length > 0;
+
+  // Date defaults to today when omitted. Time is only recorded when given;
+  // date-only entries anchor to noon so the calendar day never shifts across
+  // timezones, and their time is never displayed (hasTime stays false).
+  let date: Date;
+  if (dateStr && timeStr) {
+    date = new Date(`${dateStr}T${timeStr}`);
+  } else if (dateStr) {
+    date = new Date(`${dateStr}T12:00`);
+  } else if (timeStr) {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    date = new Date(`${y}-${m}-${d}T${timeStr}`);
+  } else {
+    date = new Date();
+  }
 
   await prisma.interaction.create({
-    data: { contactId, type, note, date: dateStr ? new Date(dateStr) : new Date() },
+    data: { contactId, type, note, date, hasTime },
   });
 
   revalidatePath(`/contacts/${contactId}`);
