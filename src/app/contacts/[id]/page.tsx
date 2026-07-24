@@ -6,7 +6,7 @@ import { ReminderCard } from "@/components/reminder-card";
 import { getContactDetail } from "@/lib/queries";
 import { getPendingReminders } from "@/lib/queries";
 import { logInteraction } from "@/lib/actions";
-import { birthdayLabel, formatShortDate } from "@/lib/format";
+import { birthdayLabel, formatShortDate, whatsappLink } from "@/lib/format";
 import { CIRCLE_LABELS, INTERACTION_TYPES, INTERACTION_LABELS, type Circle } from "@/lib/constants";
 
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -58,9 +58,19 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
               {contact.phone && (
-                <div className="flex items-center gap-3">
-                  <Phone size={16} className="text-foreground-muted" />
-                  <span>{contact.phone}</span>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Phone size={16} className="text-foreground-muted" />
+                    <span>{contact.phone}</span>
+                  </div>
+                  <a
+                    href={whatsappLink(contact.phone)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full bg-secondary-soft px-3 py-1 text-xs font-semibold text-secondary-foreground hover:brightness-95"
+                  >
+                    WhatsApp
+                  </a>
                 </div>
               )}
               {contact.email && (

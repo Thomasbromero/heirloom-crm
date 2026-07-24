@@ -1,5 +1,10 @@
 const DAY_MS = 1000 * 60 * 60 * 24;
 
+export function whatsappLink(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  return `https://api.whatsapp.com/send/?phone=${digits}&text&type=phone_number&app_absent=0`;
+}
+
 export function daysBetween(a: Date, b: Date): number {
   const start = new Date(a.getFullYear(), a.getMonth(), a.getDate());
   const end = new Date(b.getFullYear(), b.getMonth(), b.getDate());
