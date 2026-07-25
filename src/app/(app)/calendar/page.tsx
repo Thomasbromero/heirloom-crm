@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
 import { Avatar } from "@/components/avatar";
-import { getRemindersForMonth } from "@/lib/queries";
+import { CalendarFilter } from "@/components/calendar-filter";
+import { getRemindersForMonth, getInteractionsForMonth, getContactsForFilter } from "@/lib/queries";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH_NAMES = [
@@ -38,14 +39,19 @@ function buildGrid(year: number, month: number) {
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ year?: string; month?: string }>;
+  searchParams: Promise<{ year?: string; month?: string; contactId?: string }>;
 }) {
-  const { year: yearParam, month: monthParam } = await searchParams;
+  const { year: yearParam, month: monthParam, contactId } = await searchParams;
   const now = new Date();
   const year = yearParam ? parseInt(yearParam, 10) : now.getFullYear();
   const month = monthParam ? parseInt(monthParam, 10) : now.getMonth();
 
-  const reminders = await getRemindersForMonth(year, month);
+  const [reminders, interactions, contacts] = await Promise.all([
+    getRemindersForMonth(year, month, contactId),
+    contactId ? getInteractionsForMonth(year, month, contactId) : Promise.resolve([]),
+    getContactsForFilter(),
+  ]);
+
   const remindersByDay = new Map<number, typeof reminders>();
   for (const r of reminders) {
     if (!r.dueDate) continue;
@@ -53,31 +59,46 @@ export default async function CalendarPage({
     remindersByDay.set(day, [...(remindersByDay.get(day) ?? []), r]);
   }
 
+  const interactionsByDay = new Map<number, typeof interactions>();
+  for (const i of interactions) {
+    const day = i.date.getDate();
+    interactionsByDay.set(day, [...(interactionsByDay.get(day) ?? []), i]);
+  }
+
+  const selectedContactName = contactId ? contacts.find((c) => c.id === contactId)?.name : undefined;
+
   const weeks = buildGrid(year, month);
   const prev = month === 0 ? { year: year - 1, month: 11 } : { year, month: month - 1 };
   const next = month === 11 ? { year: year + 1, month: 0 } : { year, month: month + 1 };
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:px-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-display text-3xl font-bold">
           {MONTH_NAMES[month]} {year}
         </h1>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <CalendarFilter contacts={contacts} year={year} month={month} selectedContactId={contactId} />
           <Link
-            href={`/calendar?year=${prev.year}&month=${prev.month}`}
+            href={`/calendar?year=${prev.year}&month=${prev.month}${contactId ? `&contactId=${contactId}` : ""}`}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-surface-muted"
           >
             <ChevronLeft size={18} />
           </Link>
           <Link
-            href={`/calendar?year=${next.year}&month=${next.month}`}
+            href={`/calendar?year=${next.year}&month=${next.month}${contactId ? `&contactId=${contactId}` : ""}`}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-surface-muted"
           >
             <ChevronRight size={18} />
           </Link>
         </div>
       </div>
+
+      {selectedContactName && (
+        <p className="mt-3 text-sm text-foreground-muted">
+          Showing reminders and past contact with <span className="font-semibold text-foreground">{selectedContactName}</span> only.
+        </p>
+      )}
 
       <div className="mt-6 grid grid-cols-7 gap-px overflow-hidden rounded-2xl border border-border bg-border text-center text-xs font-semibold text-foreground-muted">
         {WEEKDAYS.map((d) => (
@@ -90,8 +111,8 @@ export default async function CalendarPage({
       <div className="grid grid-cols-7 gap-px overflow-hidden rounded-b-2xl border-x border-b border-border bg-border">
         {weeks.flat().map(({ date, inMonth }, i) => {
           const dayReminders = inMonth ? remindersByDay.get(date.getDate()) ?? [] : [];
-          const isToday =
-            date.toDateString() === now.toDateString();
+          const dayInteractions = inMonth ? interactionsByDay.get(date.getDate()) ?? [] : [];
+          const isToday = date.toDateString() === now.toDateString();
 
           return (
             <div
@@ -107,6 +128,16 @@ export default async function CalendarPage({
               </span>
 
               <div className="mt-1 flex flex-col gap-1">
+                {dayInteractions.map((int) => (
+                  <Link
+                    key={int.id}
+                    href={`/contacts/${int.contactId}`}
+                    className="flex items-center gap-1 truncate rounded-md bg-secondary-soft px-1 py-0.5 text-[10px] font-medium text-secondary-foreground sm:text-xs"
+                  >
+                    <MessageCircle size={10} />
+                    <span className="truncate">Talked to {int.contact.name.split(" ")[0]}</span>
+                  </Link>
+                ))}
                 {dayReminders.slice(0, 2).map((r) => (
                   <Link
                     key={r.id}
@@ -135,7 +166,7 @@ export default async function CalendarPage({
         <Link href="/" className="font-medium text-secondary-foreground hover:underline">
           Home
         </Link>{" "}
-        dashboard instead.
+        dashboard instead. Filter by a contact above to also see the days you logged an interaction with them.
       </p>
     </div>
   );

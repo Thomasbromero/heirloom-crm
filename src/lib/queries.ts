@@ -122,13 +122,31 @@ export async function getUpcomingBirthdays(withinDays = 60) {
     .sort((a, b) => a.daysAway - b.daysAway);
 }
 
-export async function getRemindersForMonth(year: number, month: number) {
+export async function getRemindersForMonth(year: number, month: number, contactId?: string) {
   const start = new Date(year, month, 1);
   const end = new Date(year, month + 1, 1);
 
   return prisma.reminder.findMany({
-    where: { dueDate: { gte: start, lt: end } },
+    where: { dueDate: { gte: start, lt: end }, ...(contactId ? { contactId } : {}) },
     include: { contact: true, eventContext: true },
     orderBy: { dueDate: "asc" },
+  });
+}
+
+export async function getInteractionsForMonth(year: number, month: number, contactId: string) {
+  const start = new Date(year, month, 1);
+  const end = new Date(year, month + 1, 1);
+
+  return prisma.interaction.findMany({
+    where: { date: { gte: start, lt: end }, contactId },
+    include: { contact: true },
+    orderBy: { date: "asc" },
+  });
+}
+
+export async function getContactsForFilter() {
+  return prisma.contact.findMany({
+    select: { id: true, name: true, avatarUrl: true },
+    orderBy: { name: "asc" },
   });
 }
