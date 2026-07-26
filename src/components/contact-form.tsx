@@ -51,16 +51,16 @@ export function ContactForm({
       {contact?.id && <input type="hidden" name="id" value={contact.id} />}
 
       <div className="min-w-0 max-w-full overflow-hidden">
-        <label className="text-sm font-semibold" htmlFor="avatar">Photo (optional)</label>
+        <span className="text-sm font-semibold">Photo (optional)</span>
         <div className="mt-1.5 flex max-w-full min-w-0 items-center gap-3 overflow-hidden">
           <Avatar name={contact?.name || "?"} avatarUrl={contact?.avatarUrl} size="lg" />
-          <input
-            id="avatar"
-            name="avatar"
-            type="file"
-            accept="image/*"
-            className="block w-0 min-w-0 flex-1 overflow-hidden text-sm text-foreground-muted file:mr-3 file:rounded-full file:border-0 file:bg-surface-muted file:px-4 file:py-2 file:text-sm file:font-medium file:text-foreground hover:file:bg-border"
-          />
+          <label
+            htmlFor="avatar"
+            className="cursor-pointer whitespace-nowrap rounded-full bg-surface-muted px-4 py-2 text-sm font-medium text-foreground hover:bg-border"
+          >
+            Choose Photo
+          </label>
+          <input id="avatar" name="avatar" type="file" accept="image/*" className="sr-only" />
         </div>
       </div>
 
