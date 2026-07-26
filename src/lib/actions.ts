@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { uploadAvatar } from "@/lib/blob";
 
 export async function setAppName(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
@@ -56,12 +57,14 @@ export async function createContact(formData: FormData) {
   const email = (formData.get("email") as string)?.trim() || null;
   const preferredContact = (formData.get("preferredContact") as string)?.trim() || null;
   const notes = (formData.get("notes") as string)?.trim() || null;
+  const avatarUrl = await uploadAvatar(formData.get("avatar") as File | null);
 
   const contact = await prisma.contact.create({
     data: {
       name: combineName(firstName, lastName),
       firstName,
       lastName: lastName || null,
+      avatarUrl,
       circle,
       howMet,
       birthday: birthdayStr ? new Date(birthdayStr) : null,
@@ -90,6 +93,7 @@ export async function updateContact(formData: FormData) {
   const email = (formData.get("email") as string)?.trim() || null;
   const preferredContact = (formData.get("preferredContact") as string)?.trim() || null;
   const notes = (formData.get("notes") as string)?.trim() || null;
+  const avatarUrl = await uploadAvatar(formData.get("avatar") as File | null);
 
   await prisma.contact.update({
     where: { id },
@@ -97,6 +101,7 @@ export async function updateContact(formData: FormData) {
       name: combineName(firstName, lastName),
       firstName,
       lastName: lastName || null,
+      ...(avatarUrl ? { avatarUrl } : {}),
       circle,
       howMet,
       birthday: birthdayStr ? new Date(birthdayStr) : null,

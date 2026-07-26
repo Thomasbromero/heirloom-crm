@@ -1,3 +1,4 @@
+import { Avatar } from "@/components/avatar";
 import { CIRCLES, CIRCLE_LABELS, type Circle } from "@/lib/constants";
 
 type ContactFormValues = {
@@ -5,6 +6,7 @@ type ContactFormValues = {
   name?: string;
   firstName?: string | null;
   lastName?: string | null;
+  avatarUrl?: string | null;
   circle?: string;
   howMet?: string | null;
   birthday?: Date | null;
@@ -47,6 +49,20 @@ export function ContactForm({
   return (
     <form action={action} className="mt-6 flex flex-col gap-5">
       {contact?.id && <input type="hidden" name="id" value={contact.id} />}
+
+      <div>
+        <label className="text-sm font-semibold" htmlFor="avatar">Photo (optional)</label>
+        <div className="mt-1.5 flex items-center gap-3">
+          <Avatar name={contact?.name || "?"} avatarUrl={contact?.avatarUrl} size="lg" />
+          <input
+            id="avatar"
+            name="avatar"
+            type="file"
+            accept="image/*"
+            className="block flex-1 text-sm text-foreground-muted file:mr-3 file:rounded-full file:border-0 file:bg-surface-muted file:px-4 file:py-2 file:text-sm file:font-medium file:text-foreground hover:file:bg-border"
+          />
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
