@@ -20,15 +20,19 @@ export function ReminderForm({
   contacts,
   eventContexts,
   initialContactId,
+  initialEventContextId,
 }: {
   contacts: Contact[];
   eventContexts: EventContext[];
   initialContactId?: string;
+  initialEventContextId?: string;
 }) {
   const [contactId, setContactId] = useState(initialContactId ?? contacts[0]?.id ?? "");
   const [actionType, setActionType] = useState<ActionType>("message");
-  const [timingMode, setTimingMode] = useState<"date" | "event">("date");
-  const [eventChoice, setEventChoice] = useState(eventContexts[0]?.id ?? "__new__");
+  const [timingMode, setTimingMode] = useState<"date" | "event">(initialEventContextId ? "event" : "date");
+  const [eventChoice, setEventChoice] = useState(
+    initialEventContextId ?? eventContexts[0]?.id ?? "__new__"
+  );
   const [priority, setPriority] = useState<"normal" | "urgent">("normal");
 
   return (

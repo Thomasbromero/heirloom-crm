@@ -107,6 +107,27 @@ export async function getEventContexts() {
   return prisma.eventContext.findMany({ orderBy: { createdAt: "desc" } });
 }
 
+export async function getEventsWithReminderCounts() {
+  const events = await prisma.eventContext.findMany({
+    include: { _count: { select: { reminders: true } } },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return events;
+}
+
+export async function getEventDetail(id: string) {
+  return prisma.eventContext.findUnique({
+    where: { id },
+    include: {
+      reminders: {
+        include: { contact: true },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+  });
+}
+
 export async function getUpcomingBirthdays(withinDays = 60) {
   const contacts = await prisma.contact.findMany({ where: { birthday: { not: null } } });
   const now = new Date();

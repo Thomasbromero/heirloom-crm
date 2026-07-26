@@ -129,6 +129,54 @@ export async function deleteContact(formData: FormData) {
   redirect("/contacts");
 }
 
+export async function createEvent(formData: FormData) {
+  const name = (formData.get("name") as string)?.trim();
+  if (!name) return;
+
+  const dateStr = formData.get("date") as string;
+  const notes = (formData.get("notes") as string)?.trim() || null;
+
+  const event = await prisma.eventContext.create({
+    data: { name, date: dateStr ? new Date(`${dateStr}T12:00`) : null, notes },
+  });
+
+  revalidatePath("/events");
+  revalidatePath("/");
+  redirect(`/events/${event.id}`);
+}
+
+export async function updateEvent(formData: FormData) {
+  const id = formData.get("id") as string;
+  const name = (formData.get("name") as string)?.trim();
+  if (!id || !name) return;
+
+  const dateStr = formData.get("date") as string;
+  const notes = (formData.get("notes") as string)?.trim() || null;
+
+  await prisma.eventContext.update({
+    where: { id },
+    data: { name, date: dateStr ? new Date(`${dateStr}T12:00`) : null, notes },
+  });
+
+  revalidatePath("/events");
+  revalidatePath(`/events/${id}`);
+  revalidatePath("/");
+  redirect(`/events/${id}`);
+}
+
+export async function deleteEvent(formData: FormData) {
+  const id = formData.get("id") as string;
+  if (!id) return;
+
+  await prisma.reminder.deleteMany({ where: { eventContextId: id } });
+  await prisma.eventContext.delete({ where: { id } });
+
+  revalidatePath("/events");
+  revalidatePath("/");
+  revalidatePath("/calendar");
+  redirect("/events");
+}
+
 export async function createReminder(formData: FormData) {
   const contactId = formData.get("contactId") as string;
   const actionType = formData.get("actionType") as string;

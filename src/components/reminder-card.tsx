@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MessageSquare, Coffee, Phone, MoreHorizontal, Check, Clock3 } from "lucide-react";
 import { Avatar } from "@/components/avatar";
 import { completeReminder, snoozeReminder } from "@/lib/actions";
@@ -32,7 +33,16 @@ export function ReminderCard({ reminder, showContact = true }: { reminder: Remin
           <div>
             {showContact && <p className="font-display font-semibold">{reminder.contact.name}</p>}
             <p className="text-sm text-foreground-muted">
-              {reminder.eventContext ? `Context: ${reminder.eventContext.name}` : due?.label}
+              {reminder.eventContext ? (
+                <>
+                  Context:{" "}
+                  <Link href={`/events/${reminder.eventContext.id}`} className="underline hover:text-foreground">
+                    {reminder.eventContext.name}
+                  </Link>
+                </>
+              ) : (
+                due?.label
+              )}
             </p>
           </div>
         </div>

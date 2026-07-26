@@ -7,9 +7,9 @@ import { getEventContexts } from "@/lib/queries";
 export default async function NewReminderPage({
   searchParams,
 }: {
-  searchParams: Promise<{ contactId?: string }>;
+  searchParams: Promise<{ contactId?: string; eventContextId?: string }>;
 }) {
-  const { contactId } = await searchParams;
+  const { contactId, eventContextId } = await searchParams;
 
   const [contacts, eventContexts] = await Promise.all([
     prisma.contact.findMany({ select: { id: true, name: true, avatarUrl: true }, orderBy: { name: "asc" } }),
@@ -34,7 +34,12 @@ export default async function NewReminderPage({
           </Link>
         </p>
       ) : (
-        <ReminderForm contacts={contacts} eventContexts={eventContexts} initialContactId={contactId} />
+        <ReminderForm
+          contacts={contacts}
+          eventContexts={eventContexts}
+          initialContactId={contactId}
+          initialEventContextId={eventContextId}
+        />
       )}
     </div>
   );

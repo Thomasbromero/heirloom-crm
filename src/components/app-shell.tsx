@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Home, Users, Calendar, Archive, Settings, Plus } from "lucide-react";
+import { Home, Users, Calendar, Archive, Settings, Plus, Tag } from "lucide-react";
 import { SidebarLink, TabLink } from "@/components/nav-link";
 import { Avatar } from "@/components/avatar";
 import { getAppSettings } from "@/lib/queries";
@@ -35,6 +35,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <SidebarLink href="/" icon={<Home size={18} />} label="Home" />
           <SidebarLink href="/contacts" icon={<Users size={18} />} label="Contacts" />
           <SidebarLink href="/calendar" icon={<Calendar size={18} />} label="Calendar" />
+          <SidebarLink href="/events" icon={<Tag size={18} />} label="Events" />
           <SidebarLink href="/archive" icon={<Archive size={18} />} label="Archive" />
         </nav>
 
@@ -50,6 +51,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <TabLink href="/" icon={<Home size={20} />} label="Home" />
           <TabLink href="/contacts" icon={<Users size={20} />} label="Contacts" />
           <TabLink href="/calendar" icon={<Calendar size={20} />} label="Calendar" />
+          <TabLink href="/events" icon={<Tag size={20} />} label="Events" />
           <TabLink href="/archive" icon={<Archive size={20} />} label="Archive" />
           <TabLink href="/settings" icon={<Settings size={20} />} label="Settings" />
         </nav>
