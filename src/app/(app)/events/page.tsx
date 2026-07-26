@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus, Tag } from "lucide-react";
 import { getEventsWithReminderCounts } from "@/lib/queries";
-import { formatDate } from "@/lib/format";
+import { formatEventDateRange } from "@/lib/format";
 
 export default async function EventsPage() {
   const events = await getEventsWithReminderCounts();
@@ -49,7 +49,7 @@ export default async function EventsPage() {
                 <div>
                   <p className="font-display font-semibold">{event.name}</p>
                   <p className="text-xs text-foreground-muted">
-                    {event.date ? formatDate(event.date) : "No date set"}
+                    {formatEventDateRange(event.date, event.endDate)}
                   </p>
                 </div>
               </div>

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Pencil, Trash2, UserPlus, MessageSquare, Coffee, Phone, MoreHorizontal, Check } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2, UserPlus, MessageSquare, Coffee, Phone, MoreHorizontal, Check, X } from "lucide-react";
 import { Avatar } from "@/components/avatar";
 import { DangerButton } from "@/components/danger-button";
 import { getEventDetail } from "@/lib/queries";
-import { deleteEvent, completeReminder } from "@/lib/actions";
-import { formatDate } from "@/lib/format";
+import { deleteEvent, completeReminder, removeReminder } from "@/lib/actions";
+import { formatEventDateRange } from "@/lib/format";
 import { ACTION_LABELS, type ActionType } from "@/lib/constants";
 
 const ACTION_ICONS: Record<ActionType, typeof MessageSquare> = {
@@ -34,7 +34,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div>
           <h1 className="font-display text-2xl font-bold sm:text-3xl">{event.name}</h1>
           <p className="mt-1 text-sm text-foreground-muted">
-            {event.date ? formatDate(event.date) : "No date set"}
+            {formatEventDateRange(event.date, event.endDate)}
           </p>
         </div>
 
@@ -103,29 +103,54 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                       </span>
                     </div>
                   </Link>
-                  <form action={completeReminder}>
-                    <input type="hidden" name="id" value={r.id} />
-                    <button
-                      type="submit"
-                      className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-hover"
-                    >
-                      <Check size={14} />
-                      Done
-                    </button>
-                  </form>
+                  <div className="flex items-center gap-2">
+                    <form action={completeReminder}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button
+                        type="submit"
+                        className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-hover"
+                      >
+                        <Check size={14} />
+                        Done
+                      </button>
+                    </form>
+                    <form action={removeReminder}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <DangerButton
+                        confirmMessage={`Remove ${r.contact.name} from this event?`}
+                        className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-foreground-muted hover:bg-surface-muted"
+                      >
+                        <X size={14} />
+                      </DangerButton>
+                    </form>
+                  </div>
                 </div>
               );
             })}
 
             {done.map((r) => (
-              <div key={r.id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface-muted p-4 opacity-70">
-                <Avatar name={r.contact.name} avatarUrl={r.contact.avatarUrl} size="sm" />
-                <div>
-                  <p className="text-sm font-medium">{r.contact.name}</p>
-                  <p className="text-xs text-foreground-muted">
-                    {ACTION_LABELS[r.actionType as ActionType] ?? "Other"} · Done
-                  </p>
+              <div
+                key={r.id}
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-surface-muted p-4 opacity-70"
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar name={r.contact.name} avatarUrl={r.contact.avatarUrl} size="sm" />
+                  <div>
+                    <p className="text-sm font-medium">{r.contact.name}</p>
+                    <p className="text-xs text-foreground-muted">
+                      {ACTION_LABELS[r.actionType as ActionType] ?? "Other"} · Done
+                    </p>
+                  </div>
                 </div>
+                <form action={removeReminder}>
+                  <input type="hidden" name="id" value={r.id} />
+                  <DangerButton
+                    confirmMessage={`Remove ${r.contact.name} from this event?`}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-foreground-muted hover:bg-surface-muted"
+                  >
+                    <X size={14} />
+                  </DangerButton>
+                </form>
               </div>
             ))}
           </div>

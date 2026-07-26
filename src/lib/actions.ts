@@ -129,15 +129,26 @@ export async function deleteContact(formData: FormData) {
   redirect("/contacts");
 }
 
+function parseEventDates(formData: FormData) {
+  const dateStr = formData.get("date") as string;
+  const endDateStr = formData.get("endDate") as string;
+
+  const date = dateStr ? new Date(`${dateStr}T12:00`) : null;
+  // An end date only means something once there's a start date to range from.
+  const endDate = date && endDateStr ? new Date(`${endDateStr}T12:00`) : null;
+
+  return { date, endDate };
+}
+
 export async function createEvent(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   if (!name) return;
 
-  const dateStr = formData.get("date") as string;
+  const { date, endDate } = parseEventDates(formData);
   const notes = (formData.get("notes") as string)?.trim() || null;
 
   const event = await prisma.eventContext.create({
-    data: { name, date: dateStr ? new Date(`${dateStr}T12:00`) : null, notes },
+    data: { name, date, endDate, notes },
   });
 
   revalidatePath("/events");
@@ -150,18 +161,31 @@ export async function updateEvent(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   if (!id || !name) return;
 
-  const dateStr = formData.get("date") as string;
+  const { date, endDate } = parseEventDates(formData);
   const notes = (formData.get("notes") as string)?.trim() || null;
 
   await prisma.eventContext.update({
     where: { id },
-    data: { name, date: dateStr ? new Date(`${dateStr}T12:00`) : null, notes },
+    data: { name, date, endDate, notes },
   });
 
   revalidatePath("/events");
   revalidatePath(`/events/${id}`);
   revalidatePath("/");
   redirect(`/events/${id}`);
+}
+
+export async function removeReminder(formData: FormData) {
+  const id = formData.get("id") as string;
+  if (!id) return;
+
+  const reminder = await prisma.reminder.delete({ where: { id } });
+
+  revalidatePath("/events");
+  if (reminder.eventContextId) revalidatePath(`/events/${reminder.eventContextId}`);
+  revalidatePath("/");
+  revalidatePath("/calendar");
+  revalidatePath(`/contacts/${reminder.contactId}`);
 }
 
 export async function deleteEvent(formData: FormData) {

@@ -44,6 +44,20 @@ export function formatShortDate(date: Date): string {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+export function formatEventDateRange(date: Date | null, endDate: Date | null): string {
+  if (!date) return "No date set";
+  if (!endDate) return formatDate(date);
+
+  const sameYear = date.getFullYear() === endDate.getFullYear();
+  const start = date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: sameYear ? undefined : "numeric",
+  });
+  const end = endDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return `${start} – ${end}`;
+}
+
 export function formatTime(date: Date): string {
   return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }

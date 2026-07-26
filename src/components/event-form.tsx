@@ -2,6 +2,7 @@ type EventFormValues = {
   id?: string;
   name?: string;
   date?: Date | null;
+  endDate?: Date | null;
   notes?: string | null;
 };
 
@@ -36,7 +37,7 @@ export function EventForm({
       </div>
 
       <div>
-        <label className="text-sm font-semibold" htmlFor="date">Date (optional)</label>
+        <label className="text-sm font-semibold" htmlFor="date">Start date (optional)</label>
         <input
           id="date"
           name="date"
@@ -45,6 +46,20 @@ export function EventForm({
           className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
         />
         <p className="mt-1 text-xs text-foreground-muted">Leave blank if you don&apos;t have a date yet.</p>
+      </div>
+
+      <div>
+        <label className="text-sm font-semibold" htmlFor="endDate">End date (optional)</label>
+        <input
+          id="endDate"
+          name="endDate"
+          type="date"
+          defaultValue={toDateInputValue(event?.endDate)}
+          className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+        />
+        <p className="mt-1 text-xs text-foreground-muted">
+          Leave blank if it&apos;s just a single day on the start date.
+        </p>
       </div>
 
       <div>

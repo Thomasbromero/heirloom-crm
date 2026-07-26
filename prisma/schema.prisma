@@ -47,6 +47,7 @@ model EventContext {
   id        String   @id @default(cuid())
   name      String
   date      DateTime?
+  endDate   DateTime?
   notes     String?
   createdAt DateTime @default(now())
 
