@@ -47,12 +47,12 @@ export function ContactForm({
     : 1;
 
   return (
-    <form action={action} className="mt-6 flex flex-col gap-5">
+    <form action={action} className="mt-6 flex w-full min-w-0 max-w-full flex-col gap-5 overflow-x-hidden">
       {contact?.id && <input type="hidden" name="id" value={contact.id} />}
 
-      <div>
+      <div className="min-w-0 max-w-full overflow-hidden">
         <label className="text-sm font-semibold" htmlFor="avatar">Photo (optional)</label>
-        <div className="mt-1.5 flex min-w-0 items-center gap-3">
+        <div className="mt-1.5 flex max-w-full min-w-0 items-center gap-3 overflow-hidden">
           <Avatar name={contact?.name || "?"} avatarUrl={contact?.avatarUrl} size="lg" />
           <input
             id="avatar"
