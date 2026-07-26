@@ -151,29 +151,27 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                 placeholder="What did you talk about?"
                 className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
               />
-              <div className="grid grid-cols-2 gap-3">
-                <div className="min-w-0">
-                  <label className="text-xs font-medium text-foreground-muted" htmlFor="interaction-date">
-                    Date (optional)
-                  </label>
-                  <input
-                    id="interaction-date"
-                    name="date"
-                    type="date"
-                    className="mt-1 w-full min-w-0 rounded-xl border border-border bg-background px-2 py-2 text-sm outline-none focus:border-primary"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <label className="text-xs font-medium text-foreground-muted" htmlFor="interaction-time">
-                    Time (optional)
-                  </label>
-                  <input
-                    id="interaction-time"
-                    name="time"
-                    type="time"
-                    className="mt-1 w-full min-w-0 rounded-xl border border-border bg-background px-2 py-2 text-sm outline-none focus:border-primary"
-                  />
-                </div>
+              <div>
+                <label className="text-xs font-medium text-foreground-muted" htmlFor="interaction-date">
+                  Date (optional)
+                </label>
+                <input
+                  id="interaction-date"
+                  name="date"
+                  type="date"
+                  className="mt-1 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-foreground-muted" htmlFor="interaction-time">
+                  Time (optional)
+                </label>
+                <input
+                  id="interaction-time"
+                  name="time"
+                  type="time"
+                  className="mt-1 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                />
               </div>
               <p className="text-xs text-foreground-muted">
                 Leave the date blank to use today. Time is optional.

@@ -119,27 +119,26 @@ export function ContactForm({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="min-w-0">
-          <label className="text-sm font-semibold" htmlFor="birthday">Birthday</label>
-          <input
-            id="birthday"
-            name="birthday"
-            type="date"
-            defaultValue={toDateInputValue(contact?.birthday)}
-            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-2 py-2.5 text-sm outline-none focus:border-primary"
-          />
-        </div>
-        <div className="min-w-0">
-          <label className="text-sm font-semibold" htmlFor="preferredContact">Reach them via</label>
-          <input
-            id="preferredContact"
-            name="preferredContact"
-            defaultValue={contact?.preferredContact ?? ""}
-            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
-            placeholder="WhatsApp, Instagram..."
-          />
-        </div>
+      <div>
+        <label className="text-sm font-semibold" htmlFor="birthday">Birthday</label>
+        <input
+          id="birthday"
+          name="birthday"
+          type="date"
+          defaultValue={toDateInputValue(contact?.birthday)}
+          className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-semibold" htmlFor="preferredContact">Reach them via</label>
+        <input
+          id="preferredContact"
+          name="preferredContact"
+          defaultValue={contact?.preferredContact ?? ""}
+          className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+          placeholder="WhatsApp, Instagram..."
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
