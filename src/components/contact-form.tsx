@@ -52,37 +52,37 @@ export function ContactForm({
 
       <div>
         <label className="text-sm font-semibold" htmlFor="avatar">Photo (optional)</label>
-        <div className="mt-1.5 flex items-center gap-3">
+        <div className="mt-1.5 flex min-w-0 items-center gap-3">
           <Avatar name={contact?.name || "?"} avatarUrl={contact?.avatarUrl} size="lg" />
           <input
             id="avatar"
             name="avatar"
             type="file"
             accept="image/*"
-            className="block flex-1 text-sm text-foreground-muted file:mr-3 file:rounded-full file:border-0 file:bg-surface-muted file:px-4 file:py-2 file:text-sm file:font-medium file:text-foreground hover:file:bg-border"
+            className="block w-0 min-w-0 flex-1 overflow-hidden text-sm text-foreground-muted file:mr-3 file:rounded-full file:border-0 file:bg-surface-muted file:px-4 file:py-2 file:text-sm file:font-medium file:text-foreground hover:file:bg-border"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+        <div className="min-w-0">
           <label className="text-sm font-semibold" htmlFor="firstName">First name</label>
           <input
             id="firstName"
             name="firstName"
             required
             defaultValue={defaultFirstName(contact)}
-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
             placeholder="First name"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="text-sm font-semibold" htmlFor="lastName">Last name</label>
           <input
             id="lastName"
             name="lastName"
             defaultValue={defaultLastName(contact)}
-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
             placeholder="Last name (optional)"
           />
         </div>
@@ -120,46 +120,46 @@ export function ContactForm({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+        <div className="min-w-0">
           <label className="text-sm font-semibold" htmlFor="birthday">Birthday</label>
           <input
             id="birthday"
             name="birthday"
             type="date"
             defaultValue={toDateInputValue(contact?.birthday)}
-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-2 py-2.5 text-sm outline-none focus:border-primary"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="text-sm font-semibold" htmlFor="preferredContact">Reach them via</label>
           <input
             id="preferredContact"
             name="preferredContact"
             defaultValue={contact?.preferredContact ?? ""}
-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
             placeholder="WhatsApp, Instagram..."
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+        <div className="min-w-0">
           <label className="text-sm font-semibold" htmlFor="phone">Phone</label>
           <input
             id="phone"
             name="phone"
             defaultValue={contact?.phone ?? ""}
-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="text-sm font-semibold" htmlFor="email">Email</label>
           <input
             id="email"
             name="email"
             type="email"
             defaultValue={contact?.email ?? ""}
-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
+            className="mt-1.5 w-full min-w-0 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none focus:border-primary"
           />
         </div>
       </div>
