@@ -50,6 +50,8 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <TabLink href="/" icon={<Home size={20} />} label="Home" />
           <TabLink href="/contacts" icon={<Users size={20} />} label="Contacts" />
           <TabLink href="/calendar" icon={<Calendar size={20} />} label="Calendar" />
+          <TabLink href="/archive" icon={<Archive size={20} />} label="Archive" />
+          <TabLink href="/settings" icon={<Settings size={20} />} label="Settings" />
         </nav>
 
         <Link
